@@ -34,7 +34,14 @@ public class UserService {
     */
 
     public User updateUser(Long id, User user) {
-        return userRepository.save(user);
+        User user2 = getUserById(id);
+        user2.setEmail(user.getEmail());
+        user2.setAddress(user.getAddress());
+        user2.setPhone(user.getPhone());
+        user2.setPassword(user.getPassword());
+        user2.setName(user.getName());
+        user2.setCreditCardNumber(user.getCreditCardNumber());
+        return userRepository.save(user2);
     }
 
     public ResponseEntity<User> deleteUser(Long id) {
