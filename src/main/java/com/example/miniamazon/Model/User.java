@@ -30,6 +30,14 @@ public class User {
     private String phone;
 
     private String creditCardNumber;
+    /*
+    "name" : "Mohamed Yehia",
+    "email" : "medoyehia2001@gmail.com",
+    "password" : "lol",
+    "address" : "23 lol ST",
+    "phone" : "01154793720",
+    "creditCardNumber" : "1234 5678 1234 5678"
+    */
 
 
 }
