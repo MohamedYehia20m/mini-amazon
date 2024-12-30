@@ -3,8 +3,7 @@ package com.example.miniamazon.Controller;
 
 import com.example.miniamazon.Model.User;
 import com.example.miniamazon.Service.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.http.ResponseEntity;   //response entity is a class that represents the entire HTTP response: status code, headers, and body
 import org.springframework.web.bind.annotation.*;
 
