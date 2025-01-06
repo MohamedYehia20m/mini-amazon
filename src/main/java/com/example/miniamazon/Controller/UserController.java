@@ -15,9 +15,9 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
@@ -25,17 +25,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    /*
-    @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUsers(@RequestParam String query) {
-        return ResponseEntity.ok(userService.searchUsers(query));
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.createUser(user));
     }
-
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<User>> getUsersByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(userService.getUsersByCategory(category));
-    }
-    */
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
