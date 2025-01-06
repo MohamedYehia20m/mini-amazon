@@ -35,7 +35,7 @@ public class User {
     "email" : "medoyehia2001@gmail.com",
     "password" : "lol",
     "address" : "23 lol ST",
-    "phone" : "01154793720",
+    "phone" : "0100200300",
     "creditCardNumber" : "1234 5678 1234 5678"
     */
 
