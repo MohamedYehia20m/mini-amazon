@@ -3,7 +3,6 @@ package com.example.miniamazon.Model;
 
 import lombok.*;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
 @Getter
 @Setter
