@@ -6,7 +6,6 @@ import lombok.*;
 import com.example.miniamazon.Model.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -41,9 +40,5 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
-
-    /*
-     */
-
 
 }
