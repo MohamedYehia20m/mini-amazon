@@ -3,7 +3,6 @@ package com.example.miniamazon.Service;
 import com.example.miniamazon.Model.User;
 import com.example.miniamazon.Repository.UserRepository;
 import lombok.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,17 +26,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    /*
-    public ResponseEntity<User> searchUsers(String query) {
-        return ResponseEntity.ok(userRepository.findByUsernameContaining(query));
-    }
-
-    public ResponseEntity<User> getUsersByCategory(String category) {
-        return ResponseEntity.ok(userRepository.findByCategory(category));
-    }
-
-    */
-
     public User updateUser(Long id, User user) {
         User user2 = getUserById(id);
         user2.setEmail(user.getEmail());
@@ -49,9 +37,9 @@ public class UserService {
         return userRepository.save(user2);
     }
 
-    public ResponseEntity<User> deleteUser(Long id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+
     }
 
 
