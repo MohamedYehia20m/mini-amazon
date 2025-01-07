@@ -34,6 +34,8 @@ public class ProductService {
         product.setPrice(productDetails.getPrice());
         product.setQuantity(productDetails.getQuantity());
         product.setDescription(productDetails.getDescription());
+        product.setSellerName(productDetails.getSellerName());
+        product.setSellerBankAccount(productDetails.getSellerBankAccount());
 
         return productRepository.save(product);
     }
@@ -41,41 +43,5 @@ public class ProductService {
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
-
-    /*
-    public List<Product> searchProducts(String query) {
-        return productRepository.findByNameContaining(query);
-    }
-
-
-    public List<Product> getProductsByCategory(String category) {
-        return productRepository.findByCategory(category);
-    }
-
-    public List<Product> getProductsByPriceRange(Double min, Double max) {
-        return productRepository.findByPriceBetween(min, max);
-    }
-
-    public List<Product> getProductsByStockRange(Integer min, Integer max) {
-        return productRepository.findByStockBetween(min, max);
-    }
-
-    public List<Product> getProductsByCategoryAndPriceRange(String category, Double min, Double max) {
-        return productRepository.findByCategoryAndPriceBetween(category, min, max);
-    }
-
-    public List<Product> getProductsByCategoryAndStockRange(String category, Integer min, Integer max) {
-        return productRepository.findByCategoryAndStockBetween(category, min, max);
-    }
-
-    public List<Product> getProductsByPriceAndStockRange(Double minPrice, Double maxPrice, Integer minStock, Integer maxStock) {
-        return productRepository.findByPriceBetweenAndStockBetween(minPrice, maxPrice, minStock, maxStock);
-    }
-
-    public List<Product> getProductsByCategoryAndPriceAndStockRange(String category, Double minPrice, Double maxPrice, Integer minStock, Integer maxStock) {
-        return productRepository.findByCategoryAndPriceBetweenAndStockBetween(category, minPrice, maxPrice, minStock, maxStock);
-    }
-    */
-
 
 }
