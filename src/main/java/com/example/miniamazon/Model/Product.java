@@ -27,12 +27,18 @@ public class Product {
 
     private String description;
 
+    private String sellerName;
+
+    private String sellerBankAccount;
+
     //sample product
     /*
     "name" : "Iphone 12",
     "category" : "Electronics",
     "price" : 1200,
     "quantity" : 10,
-    "description" : "The latest Iphone"
+    "description" : "The latest Iphone",
+    "sellerName" : "Apple",
+    "sellerBankAccount" : "1234 5678 1234 5678",
      */
 }
