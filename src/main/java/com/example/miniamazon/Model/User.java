@@ -1,42 +1,28 @@
 package com.example.miniamazon.Model;
 
-
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
-@Getter
-@Setter
+import java.util.List;
+
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Entity
+@Builder
 @Table(name = "users")
 public class User {
-
-    // consider proper validation for the fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String name;
-
     private String email;
-
-    private String password;
-
     private String address;
-
     private String phone;
-
+    private String password;
     private String creditCardNumber;
-    /*
-    "name" : "Mohamed Yehia",
-    "email" : "medoyehia2001@gmail.com",
-    "password" : "lol",
-    "address" : "23 lol ST",
-    "phone" : "0100200300",
-    "creditCardNumber" : "1234 5678 1234 5678"
-    */
 
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
 }
