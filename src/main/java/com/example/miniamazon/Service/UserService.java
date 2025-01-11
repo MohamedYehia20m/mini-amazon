@@ -1,11 +1,15 @@
 package com.example.miniamazon.Service;
 
+import com.example.miniamazon.Model.Product;
 import com.example.miniamazon.Model.User;
 import com.example.miniamazon.Repository.UserRepository;
 import lombok.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -19,30 +23,45 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        Optional<User> user = userRepository.findById(id);
+        return user.get();
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public User updateUser(Long id, User user) {
-        User user2 = getUserById(id);
-        user2.setEmail(user.getEmail());
-        user2.setAddress(user.getAddress());
-        user2.setPhone(user.getPhone());
-        user2.setPassword(user.getPassword());
-        user2.setName(user.getName());
-        user2.setCreditCardNumber(user.getCreditCardNumber());
-        return userRepository.save(user2);
+    public ResponseEntity<User> updateUser(Long id, User user) {
+        try{
+            User user1 = getUserById(id);
+            if(user1 == null){
+                return ResponseEntity.notFound().build();
+            }
+
+            user1.setName(user.getName());
+            user1.setEmail(user.getEmail());
+            user1.setAddress(user.getAddress());
+            user1.setPhone(user.getPhone());
+            user1.setPassword(user.getPassword());
+            user1.setCreditCardNumber(user.getCreditCardNumber());
+
+            return ResponseEntity.ok(userRepository.save(user1));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public ResponseEntity<Void> deleteUser(Long id) {
+        //return status code 204 if the order is deleted successfully
+        try {
+            User user = getUserById(id);
+            userRepository.delete(user);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
 
     }
-
-
-
 
 }
