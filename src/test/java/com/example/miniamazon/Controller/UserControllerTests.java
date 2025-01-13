@@ -34,6 +34,8 @@ class UserControllerTests {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        // Clear the database before each test
+        userRepository.deleteAll();
     }
 
     @Test
@@ -58,7 +60,7 @@ class UserControllerTests {
 
         Long id = user.getId();
 
-        String uri = UriComponentsBuilder.fromPath("/api/products/{id}")
+        String uri = UriComponentsBuilder.fromPath("/api/users/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
@@ -86,19 +88,31 @@ class UserControllerTests {
     }
 
     @Test
-    void testUpdateUser() throws Exception { // Update credit card number of an existing user
-        Long id = 3L; // Use the id of a user that exists in the database
+    void testUpdateUser() throws Exception {
+        // Add a user to the database
+        User user = User.builder()
+                .name("Test User")
+                .email("test@gmail.com")
+                .phone("1234567890")
+                .address("Test Address")
+                .password("password")
+                .creditCardNumber("1234 5678 1234 5678")
+                .orders(Collections.emptyList())
+                .build();
+        userRepository.save(user);
+
+        Long id = user.getId();
 
         String uri = UriComponentsBuilder.fromPath("/api/users/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
         String updatedUserJson = "{\n" +
-                        "  \"name\": \"Mohamed Yehia\",\n" +
-                        "  \"email\": \"medoyehia2001@gmail.com\",\n" +
+                        "  \"name\": \"Test User\",\n" +
+                        "  \"email\": \"test@gmail.com\",\n" +
+                        "  \"phone\": \"1234567890\",\n" +
+                        "  \"address\": \"Test Address\",\n" +
                         "  \"password\": \"password\",\n" +
-                        "  \"address\": \"23 lol ST\",\n" +
-                        "  \"phone\": \"0100200300\",\n" +
                         "  \"creditCardNumber\": \"1234 1234 1234 1234\"\n" +
                         "}";
 
@@ -120,7 +134,19 @@ class UserControllerTests {
 
     @Test
     void testDeleteUser() throws Exception {
-        Long id = 4L; // Use the id of an order that exists in the database
+        // Add a user to the database
+        User user = User.builder()
+                .name("Test User")
+                .email("test@gmail.com")
+                .phone("1234567890")
+                .address("Test Address")
+                .password("password")
+                .creditCardNumber("1234 5678 1234 5678")
+                .orders(Collections.emptyList())
+                .build();
+        userRepository.save(user);
+
+        Long id = user.getId();
 
         String uri = UriComponentsBuilder.fromPath("/api/users/{id}")
                 .buildAndExpand(id)
