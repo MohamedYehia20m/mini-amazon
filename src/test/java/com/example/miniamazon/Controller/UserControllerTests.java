@@ -1,6 +1,7 @@
 package com.example.miniamazon.Controller;
 
 import com.example.miniamazon.Model.User;
+import com.example.miniamazon.Repository.OrderRepository;
 import com.example.miniamazon.Repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,9 +32,16 @@ class UserControllerTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+        // avoiding foreign key constraint violation
+        orderRepository.deleteAll();
+
         // Clear the database before each test
         userRepository.deleteAll();
     }
