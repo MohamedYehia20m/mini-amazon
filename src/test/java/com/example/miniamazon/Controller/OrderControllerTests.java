@@ -1,5 +1,10 @@
 package com.example.miniamazon.Controller;
 
+import com.example.miniamazon.Model.Order;
+import com.example.miniamazon.Model.Product;
+import com.example.miniamazon.Model.User;
+import com.example.miniamazon.Repository.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,10 +33,20 @@ class OrderControllerTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        // Clear the database before each test
+        orderRepository.deleteAll();
     }
 
     @Test
@@ -41,7 +58,40 @@ class OrderControllerTests {
 
     @Test
     public void testGetOrderById() throws Exception {
-        Long id = 23L; // Use the id of an order that exists in the database
+        // add a new user
+        User user = User.builder()
+                .name("Test User")
+                .email("test@gmail.com")
+                .phone("1234567890")
+                .address("Test Address")
+                .password("password")
+                .creditCardNumber("1234 5678 1234 5678")
+                .orders(Collections.emptyList())
+                .build();
+        userRepository.save(user);
+
+        // add a new product
+        Product product = Product.builder()
+                .name("Test Product")
+                .category("Test Category")
+                .price(100.0)
+                .quantity(10)
+                .description("Test Description")
+                .sellerName("Test Seller")
+                .sellerBankAccount("1234 5678 1234 5678")
+                .build();
+        productRepository.save(product);
+
+        // add a new order
+        Order order = Order.builder()
+                .status("Delivered")
+                .totalAmount(1500.00)
+                .user(user)
+                .products(Collections.singleton(product))
+                .build();
+        orderRepository.save(order);
+
+        Long id = order.getId();
 
         String uri = UriComponentsBuilder.fromPath("/api/orders/{id}")
                 .buildAndExpand(id)
@@ -54,19 +104,45 @@ class OrderControllerTests {
 
     @Test
     void testAddOrder() throws Exception {
+        // add a new user
+        User user = User.builder()
+                .name("Test User")
+                .email("test@gmail.com")
+                .phone("1234567890")
+                .address("Test Address")
+                .password("password")
+                .creditCardNumber("1234 5678 1234 5678")
+                .orders(Collections.emptyList())
+                .build();
+        userRepository.save(user);
+
+        // add a new product
+        Product product = Product.builder()
+                .name("Test Product")
+                .category("Test Category")
+                .price(100.0)
+                .quantity(10)
+                .description("Test Description")
+                .sellerName("Test Seller")
+                .sellerBankAccount("1234 5678 1234 5678")
+                .build();
+        productRepository.save(product);
+
+        Long userId = user.getId();
+        Long productId = product.getId();
+
         String orderJson1 = "{\n" +
                 "  \"status\": \"Delivered\",\n" +
                 "  \"totalAmount\": 1500.00,\n" +
                 "  \"user\": {\n" +
-                "    \"id\": 9\n" +
+                "    \"id\": " + userId + "\n" +
                 "  },\n" +
                 "  \"products\": [\n" +
                 "    {\n" +
-                "      \"id\": 11\n" +
+                "      \"id\": " + productId + "\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}";
-
         mockMvc.perform(post("/api/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(orderJson1))
@@ -75,8 +151,43 @@ class OrderControllerTests {
     }
 
     @Test
-    void testUpdateOrder() throws Exception { // Update status of an existing order
-        Long id = 23L; // Use the id of an order that exists in the database
+    void testUpdateOrder() throws Exception {
+        // add a new user
+        User user = User.builder()
+                .name("Test User")
+                .email("test@gmail.com")
+                .phone("1234567890")
+                .address("Test Address")
+                .password("password")
+                .creditCardNumber("1234 5678 1234 5678")
+                .orders(Collections.emptyList())
+                .build();
+        userRepository.save(user);
+
+        // add a new product
+        Product product = Product.builder()
+                .name("Test Product")
+                .category("Test Category")
+                .price(100.0)
+                .quantity(10)
+                .description("Test Description")
+                .sellerName("Test Seller")
+                .sellerBankAccount("1234 5678 1234 5678")
+                .build();
+        productRepository.save(product);
+
+        // add a new order
+        Order order = Order.builder()
+                .status("PENDING")
+                .totalAmount(1500.00)
+                .user(user)
+                .products(Collections.singleton(product))
+                .build();
+        orderRepository.save(order);
+
+        Long id = order.getId();
+        Long userId = user.getId();
+        Long productId = product.getId();
 
         String uri = UriComponentsBuilder.fromPath("/api/orders/{id}")
                 .buildAndExpand(id)
@@ -86,11 +197,11 @@ class OrderControllerTests {
                 "  \"status\": \"Delivered\",\n" +
                 "  \"totalAmount\": 1500.00,\n" +
                 "  \"user\": {\n" +
-                "    \"id\": 9\n" +
+                "    \"id\": " + userId + "\n" +
                 "  },\n" +
                 "  \"products\": [\n" +
                 "    {\n" +
-                "      \"id\": 11\n" +
+                "      \"id\": " + productId +"\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}";
@@ -111,7 +222,40 @@ class OrderControllerTests {
 
     @Test
     void testDeleteOrder() throws Exception {
-        Long id = 29L; // Use the id of an order that exists in the database
+        // add a new user
+        User user = User.builder()
+                .name("Test User")
+                .email("test@gmail.com")
+                .phone("1234567890")
+                .address("Test Address")
+                .password("password")
+                .creditCardNumber("1234 5678 1234 5678")
+                .orders(Collections.emptyList())
+                .build();
+        userRepository.save(user);
+
+        // add a new product
+        Product product = Product.builder()
+                .name("Test Product")
+                .category("Test Category")
+                .price(100.0)
+                .quantity(10)
+                .description("Test Description")
+                .sellerName("Test Seller")
+                .sellerBankAccount("1234 5678 1234 5678")
+                .build();
+        productRepository.save(product);
+
+        // add a new order
+        Order order = Order.builder()
+                .status("Delivered")
+                .totalAmount(1500.00)
+                .user(user)
+                .products(Collections.singleton(product))
+                .build();
+        orderRepository.save(order);
+
+        Long id = order.getId();
 
         String uri = UriComponentsBuilder.fromPath("/api/orders/{id}")
                 .buildAndExpand(id)
