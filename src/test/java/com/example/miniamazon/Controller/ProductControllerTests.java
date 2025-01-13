@@ -34,6 +34,8 @@ class ProductControllerTests {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        // Clear the database before each test
+        productRepository.deleteAll();
     }
 
     @Test
@@ -57,6 +59,7 @@ class ProductControllerTests {
         productRepository.save(product);
 
         Long id =  product.getId();
+
         String uri = UriComponentsBuilder.fromPath("/api/products/{id}")
                 .buildAndExpand(id)
                 .toUriString();
@@ -85,15 +88,26 @@ class ProductControllerTests {
     }
 
     @Test
-    void testUpdateProduct() throws Exception {// Update status of an existing product
-        Long id = 2L; // Use the id of an product that exists in the database
+    void testUpdateProduct() throws Exception {
+        // Add a product to the database
+        Product product = Product.builder()
+                .name("Test Product")
+                .category("Test Category")
+                .price(100.0)
+                .quantity(10)
+                .description("Test Description")
+                .sellerName("Test Seller")
+                .sellerBankAccount("1234 5678 1234 5678")
+                .build();
+        productRepository.save(product);
+
+        Long id = product.getId();
 
         String uri = UriComponentsBuilder.fromPath("/api/products/{id}")
                 .buildAndExpand(id)
                 .toUriString();
 
         String updatedProductJson = "{\n" +
-                "\"id\": 1,\n" +
                 "\"name\": \"Updated Product\",\n" +
                 "\"category\": \"Test Category\",\n" +
                 "\"price\": 10000.0,\n" +
@@ -120,7 +134,19 @@ class ProductControllerTests {
 
     @Test
     void testDeleteProduct() throws Exception {
-        Long id = 8L; // Use the id of an order that exists in the database
+        // Add a product to the database
+        Product product = Product.builder()
+                .name("Test Product")
+                .category("Test Category")
+                .price(100.0)
+                .quantity(10)
+                .description("Test Description")
+                .sellerName("Test Seller")
+                .sellerBankAccount("1234 5678 1234 5678")
+                .build();
+        productRepository.save(product);
+
+        Long id = product.getId();
 
         String uri = UriComponentsBuilder.fromPath("/api/products/{id}")
                 .buildAndExpand(id)
